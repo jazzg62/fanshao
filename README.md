@@ -8,7 +8,7 @@
 
 ```bash
 # 克隆项目
-git clone xxxx
+git clone git@github.com:jazzg62/fanshao.git
 # 安装依赖
 npm install
 # 运行项目
@@ -17,8 +17,7 @@ npm start
 
 ### electron
 1. 通知 https://www.electronjs.org/zh/docs/latest/tutorial/notifications
-2. 
-
+2. xxxx
 ## License
 
 MIT
