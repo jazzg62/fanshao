@@ -1,22 +1,66 @@
 {
-  "name": "electron-quick-start",
+  "name": "fanshao",
   "version": "1.0.0",
-  "description": "A minimal Electron application",
+  "description": "惠花生商家收款工具，基于Electron 开发。",
   "main": "main.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "win32": "electron-builder --win --ia32",
+    "win64": "electron-builder --win --x64"
   },
-  "repository": "https://github.com/electron/electron-quick-start",
-  "keywords": [
-    "Electron",
-    "quick",
-    "start",
-    "tutorial",
-    "demo"
-  ],
   "author": "GitHub",
-  "license": "CC0-1.0",
+  "license": "MIT",
   "devDependencies": {
-    "electron": "^15.3.0"
+    "electron": "^15.3.0",
+    "electron-builder": "^22.13.1"
+  },
+  "build": {
+    "productName": "惠花生商家收款工具",
+    "appId": "com.fanshao.client",
+    "copyright": "©企联 2021",
+    "directories": {
+      "output": "dist"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowElevation": true,
+      "allowToChangeInstallationDirectory": true, 
+      "installerIcon": "favicon.ico",
+      "uninstallerIcon": "favicon.ico",
+      "installerHeaderIcon": "favicon.ico",
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "惠花生商家收款工具"
+    },
+    "win": {
+      "icon": "favicon.ico",
+      "requestedExecutionLevel": "requireAdministrator",
+      "target": [
+        {
+          "target": "nsis"
+        }
+      ]
+    },
+    "dmg": {
+      "contents": [
+        {
+          "x": 410,
+          "y": 150,
+          "type": "link",
+          "path": "/Applications"
+        },
+        {
+          "x": 130,
+          "y": 150,
+          "type": "file"
+        }
+      ]
+    },
+    "mac": {
+      "icon": "favicon.ico"
+    },
+    "linux": {
+      "icon": "favicon.ico"
+    }
   }
 }

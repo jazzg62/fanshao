@@ -1,5 +1,5 @@
 // Modules to control application life and create native browser window
-const {app, BrowserWindow} = require('electron')
+const {app, BrowserWindow, Menu, Tray, nativeImage} = require('electron')
 const path = require('path')
 
 function createWindow () {
@@ -7,15 +7,68 @@ function createWindow () {
   const mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
-    webPreferences: {
-      preload: path.join(__dirname, 'preload.js')
+    minWidth: 800,
+    minHeight: 600,
+    // maxWidth: 800,
+    // maxHeight: 600,
+    icon:'./favicon.ico',
+    webPreferences: {  // 首选项设置
+      backgroundThrottling: false,   //设置应用在后台正常运行
+      nodeIntegration:true,     //设置能在页面使用nodejs的API
+      contextIsolation: false,  //关闭警告信息
+      preload: path.join(__dirname, './src/preload.js')
     }
   })
 
-  // and load the index.html of the app.
-  mainWindow.loadFile('index.html')
+  // 系统托盘
+  let icon = nativeImage.createFromPath(path.join(__dirname, './favicon.ico'));
+  let tray = new Tray(icon);
+  tray.setToolTip('惠花生商家收款工具');
+  tray.setTitle('惠花生商家收款工具1');
+  tray.on('right-click', () => {
+    const template = [
+      {
+        label:'显示主界面',
+        click:()=>{
+          mainWindow.show();
+        }
+      },
+      {
+        label:'退出',
+        click:()=>{
+          app.quit();
+        }
+      }
+    ]
+    tray.popUpContextMenu(Menu.buildFromTemplate(template));
+  })
 
-  // Open the DevTools.
+  // 菜单栏
+  const template = [
+    {
+      label: '文件',
+      submenu: [
+        {
+          label: '切换账号',
+          click: function () {
+            alert('切换账号')
+          }
+        },
+        {
+          label: '退出登录',
+          click: function () {
+            alert('退出登录')
+          }
+        },
+      ]
+    }
+  ];
+  Menu.setApplicationMenu(Menu.buildFromTemplate(template))
+
+  // 加载页面文件
+  mainWindow.loadFile('src/index.html')
+
+  // 开启调试工具
   // mainWindow.webContents.openDevTools()
 }
 
