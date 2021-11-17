@@ -5,18 +5,17 @@ const path = require('path')
 function createWindow () {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
-    minWidth: 800,
-    minHeight: 600,
-    // maxWidth: 800,
-    // maxHeight: 600,
+    width: 1920,
+    height: 1080,
+    // minWidth: 1920,
+    // minHeight: 1080,
     icon:'./favicon.ico',
     webPreferences: {  // 首选项设置
       backgroundThrottling: false,   //设置应用在后台正常运行
       nodeIntegration:true,     //设置能在页面使用nodejs的API
       contextIsolation: false,  //关闭警告信息
-      preload: path.join(__dirname, './src/preload.js')
+      zoomFactor: 0.9,
+      // preload: path.join(__dirname, './src/preload.js')
     }
   })
 
@@ -24,7 +23,7 @@ function createWindow () {
   let icon = nativeImage.createFromPath(path.join(__dirname, './favicon.ico'));
   let tray = new Tray(icon);
   tray.setToolTip('惠花生商家收款工具');
-  tray.setTitle('惠花生商家收款工具1');
+  tray.setTitle('惠花生商家收款工具');
   tray.on('right-click', () => {
     const template = [
       {
@@ -44,39 +43,51 @@ function createWindow () {
   })
 
   // 菜单栏
-  const template = [
-    {
-      label: '文件',
-      submenu: [
-        {
-          label: '切换账号',
-          click: function () {
-            alert('切换账号')
-          }
-        },
-        {
-          label: '退出登录',
-          click: function () {
-            alert('退出登录')
-          }
-        },
-      ]
-    }
-  ];
-  Menu.setApplicationMenu(Menu.buildFromTemplate(template))
+  // const template = [
+  //   {
+  //     label: '功能',
+  //     submenu: [
+  //       {
+  //         label: '切换账号',
+  //         click: function () {
+  //           console.log('切换账号')
+  //         }
+  //       },
+  //       {
+  //         label: '退出登录',
+  //         click: function () {
+  //           console.log('退出登录')
+  //         }
+  //       },
+  //     ]
+  //   }
+  // ];
+  // Menu.setApplicationMenu(Menu.buildFromTemplate(template))
+  Menu.setApplicationMenu(null)
 
   // 加载页面文件
-  mainWindow.loadFile('src/index.html')
+  mainWindow.loadFile('src/dist/index.html')
 
   // 开启调试工具
   // mainWindow.webContents.openDevTools()
+  mainWindow.on('resize', function(e){
+    const defaultRatio = 1920/1080;
+    let [width, height] = mainWindow.getSize();
+    // mainWindow.setSize(width, parseInt(width/defaultRatio));
+    // mainWindow.setSize(parseInt(height*defaultRatio), height);
+    // console.log((width/1920)*0.9);
+    var minZoomFactor = 0.75;
+    var nextZoomFactor = width/1920*0.9;
+    console.log(nextZoomFactor);
+    mainWindow.webContents.setZoomFactor(nextZoomFactor<=minZoomFactor?minZoomFactor:nextZoomFactor);
+  })
 }
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
-  createWindow()
+  createWindow();
 
   app.on('activate', function () {
     // On macOS it's common to re-create a window in the app when the
