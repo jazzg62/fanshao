@@ -22,11 +22,11 @@
                   </router-link>
                   <div class="column">
                       <router-link to="/detail?lx=1" class="item w3 h3 blue1 blue1-hover">微信</router-link>
-                      <router-link to="/detail" class="item w3 h3 blue2 blue2-hover">红包</router-link>
+                      <router-link to="/detail?lx=4" class="item w3 h3 blue2 blue2-hover">红包</router-link>
                   </div>
                   <div class="column">
-                      <router-link to="/detail?lx=1" class="item w3 h3 blue2 blue2-hover">支付宝</router-link>
-                      <router-link to="/detail?lx=1" class="item w3 h3 blue1 blue1-hover">余额支付</router-link>
+                      <router-link to="/detail?lx=2" class="item w3 h3 blue2 blue2-hover">支付宝</router-link>
+                      <router-link to="/detail?lx=3" class="item w3 h3 blue1 blue1-hover">余额支付</router-link>
                   </div>
                 </div>
                 
@@ -39,8 +39,8 @@
                     </div>
                   </router-link>
                   <div class="column">
-                      <router-link to="/receipt" class="item w3 h2 blue1 blue1-hover">已支付</router-link>
-                      <router-link to="/receipt" class="item w3 h2 blue2 blue2-hover">待支付</router-link>
+                      <router-link to="/receipt?lx=1" class="item w3 h2 blue1 blue1-hover">已支付</router-link>
+                      <router-link to="/receipt?lx=2" class="item w3 h2 blue2 blue2-hover">待支付</router-link>
                       <router-link to="/receipt" class="item w3 h2 blue1 blue1-hover">全部查询</router-link>
                   </div>
                 </div>

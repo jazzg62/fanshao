@@ -13,7 +13,9 @@
                             type="text"
                             id="member-mobile"
                             name="member-mobile"
+                            v-model="table.search.member_mobile"
                             placeholder="请输入手机号"
+                            @keypress.enter="search()"
                         />
                         <div class="icon icon-m icon-search"></div>
                     </div>
@@ -24,7 +26,7 @@
                         <div class="type" :class="{'select':table.search.lx==0}" @click="table.search.lx=0">全部查询</div>
                     </div>
                 </div>
-                <el-table :data="table.data.list" stripe border >
+                <el-table :data="table.data.list" stripe border v-loading="table.loading">
                     <el-table-column prop="id" label="id" align="center">
                     </el-table-column>
                     <el-table-column
@@ -54,7 +56,7 @@
                         </div>
                         <div class="page-total">
                             <span>到</span>
-                            <input type="text" v-model="table.targetPage" @keypress.enter="enter()" />
+                            <input type="text" v-model="table.targetPage" @keypress.enter="enter()" title="输入要跳转的页码并回车" />
                             <span>页</span>
                         </div>
                     </div>
@@ -77,6 +79,7 @@
             width="656px"
             :visible.sync="isShowPayForm"
             center
+            @opened="opened()"
         >
             <div class="form">
                 <h3>请输入付款信息</h3>
@@ -85,6 +88,7 @@
                     <input
                         placeholder="请输入会员手机号"
                         name="member_mobile"
+                        ref="ref"
                         v-model="payFrom.member_mobile"
                     />
                 </div>
@@ -94,6 +98,8 @@
                     <input
                         name="xfje"
                         v-model="payFrom.xfje"
+                        @keypress.enter="pay()"
+                        @keypress.tab="pay()"
                     />
                 </div>
                 <el-button
@@ -114,13 +120,17 @@ import Menu from "../components/Menu";
 import {ApiUrl} from "../constant"
 import {stringify} from "querystring";
 export default {
-    name: "TradingRecord",
+    name: "Receipt",
     beforeMount:function(){
         let {paypop} = this.$route.query;
         if(paypop == '1'){
             setTimeout(()=>{
                 this.showPayForm();
             },500)
+        }
+        let {lx} = this.$route.query;
+        if(lx){
+            this.table.search.lx = lx;
         }
 
         this.loadForm();
@@ -133,16 +143,8 @@ export default {
     data: () => {
         return {
             table:{
-                url:'',
+                loading:false,
                 data:{total:0,totalPage:0,list:[
-                    {
-                        id: 1,
-                        member_name: "张三",
-                        member_mobile: "18955718231",
-                        xfje: "100.00",
-                        xflx: "红包支付",
-                        zt: "已支付",
-                    },
                 ]},
                 search:{
                     curpage:1,
@@ -150,16 +152,6 @@ export default {
                     member_mobile:'',
                     lx:0,
                 },
-                search_items:[
-                    {
-                        name:'lx',
-                        list:[
-                            {des:'已支付',value:1},
-                            {des:'未支付',value:2},
-                            {des:'全部查询',value:0},
-                        ]
-                    }
-                ],
                 pages:[
                     {num:'1',s:'s'}
                 ],
@@ -173,17 +165,39 @@ export default {
         }
     },
     methods:{
+        pay(){
+            this.$prompt('请扫码', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+            }).then(({ value }) => {
+                console.log(value);
+                this.$message({
+                    type: 'success',
+                    message: '支付成功'
+                });
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '已取消'
+                });       
+            });
+        },
         showPayForm(){
             this.isShowPayForm = true;
         },
-        pay(){
-
+        opened(){
+            this.$refs.ref.focus();
+        },
+        hidePayForm(){
+            this.isShowPayForm = false;
         },
         loadForm(){
+            this.table.loading = true;
             this.$http.get(ApiUrl+"?act=seller_sm&op=skmx&"+stringify({...this.table.search,key:localStorage.getItem('key')})).then(res=>{
                 this.table.data.total = res.data.datas.total;
                 this.table.data.list = res.data.datas.list;
                 this.table.data.totalPage = res.data.datas.totalPage;
+                this.table.loading = false;
 
                 this.reCalcautePage();
             })
@@ -191,54 +205,60 @@ export default {
         reCalcautePage(){
             let list = [];            
             for(let i=1;i<=this.table.data.totalPage;i++){
-                if(i<this.table.search.curpage-2){
+                if(i<this.table.search.curpage-3){
                     list.push({num:1,s:''});
                     list.push({num:-1,s:''});
-                    i=this.table.search.curpage-1;
+                    i=this.table.search.curpage-2;
                 }
-                if(i>this.table.search.curpage+2){
+                if(i>this.table.search.curpage+2 && this.table.search.curpage+3 != this.table.data.totalPage){
                     list.push({num:-2,s:''});
                     list.push({num:this.table.data.totalPage,s:''});
-                    console.log(i,this.table.search.curpage,this.table.data.totalPage,'break');
                     break;
                 }
                 let status = i==this.table.search.curpage;
                 list.push({num:i,s:status});
             }
             this.table.pages = list;
-            // 5 10
-            // 1 2 3 4 5 6 7
         },
         last(){
             if(this.table.search.curpage>1){
                 this.table.search.curpage--;
+                this.loadForm();
             }
         },
         next(){
             if(this.table.search.curpage<this.table.data.totalPage){
                 this.table.search.curpage++;
+                this.loadForm();
             }
         },
         navigateTo(num){
-            if(num<0){
+            if(num<1){
                 return ;
             }
             this.table.search.curpage = num;
             this.loadForm();
         },
         enter(){
-            this.table.search.curpage = parseInt(this.table.targetPage);
-        }
+            let targetPage = parseInt(this.table.targetPage);
+            if(targetPage<1 || targetPage>this.table.data.totalPage){
+                this.$message.warning('请输入正确的页码');
+                return 
+            }
+            this.table.search.curpage = targetPage;
+            this.loadForm();
+        },
+        search(){
+            this.loadForm();
+        },
     },
     watch:{
         'table.search.lx':function(){
-            console.log(1);
+            this.table.search.curpage = 1;
             this.loadForm();
         },
         'table.search.page':function(){
-            this.loadForm();
-        },
-        'table.search.curpage':function(){
+            this.table.search.curpage = 1;
             this.loadForm();
         },
     }
