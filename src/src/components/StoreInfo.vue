@@ -56,7 +56,7 @@ export default {
         color: #333;
     }
     .store-vip {
-        font-size: 12px;
+        font-size: 14px;
         width: 120px;
         overflow: hidden;
         white-space: nowrap;

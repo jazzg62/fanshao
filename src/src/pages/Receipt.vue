@@ -20,7 +20,10 @@
                         <div class="icon icon-m icon-search"></div>
                     </div>
                     <div class="xflx">
-                        <div class="type type-btn" @click="showPayForm()">发起收款</div>
+                        <div class="type type-btn select" @click="showPayForm()">
+                            <div class="icon icon-m icon-shoukuan-w" style="margin-right:5px"></div>
+                            发起收款
+                        </div>
                         <div class="type" :class="{'select':table.search.lx==2}" @click="table.search.lx=2">待支付</div>
                         <div class="type" :class="{'select':table.search.lx==1}" @click="table.search.lx=1">已支付</div>
                         <div class="type" :class="{'select':table.search.lx==0}" @click="table.search.lx=0">全部查询</div>
@@ -37,11 +40,17 @@
                     </el-table-column>
                     <el-table-column prop="member_mobile" label="手机号" align="center">
                     </el-table-column>
-                    <el-table-column prop="xfje" label="支付金额" align="center">
+                    <el-table-column prop="xfze" label="收款金额" align="center">
+                    </el-table-column>
+                    <el-table-column prop="xjq" label="消费券" align="center">
+                    </el-table-column>
+                    <el-table-column prop="xfje" label="实际支付" align="center">
+                    </el-table-column>
+                    <el-table-column prop="addtime" label="创建时间" align="center">
                     </el-table-column>
                     <el-table-column prop="zt" label="支付状态" align="center">
                         <template slot-scope="scope">
-                            <span :style="{color: scope.row.zt === '已支付'?null:'red'}">{{scope.row.zt}}</span>
+                            <span class="pointer" :style="{color: scope.row.zt === '已支付'?null:'red'}" @click="payByRow(scope.row)">{{scope.row.zt}}</span>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -66,9 +75,9 @@
                         id="table-size"
                         v-model="table.search.page"
                     >
-                        <option value="10">10/页</option>
-                        <option value="20">20/页</option>
-                        <option value="30">30/页</option>
+                        <option value="16">16/页</option>
+                        <option value="24">24/页</option>
+                        <option value="32">32/页</option>
                         <option value="40">40/页</option>
                     </select>
                 </div>
@@ -90,6 +99,7 @@
                         name="member_mobile"
                         ref="ref"
                         v-model="payFrom.member_mobile"
+                        @keypress.enter="pay()"
                     />
                 </div>
                 <h3 style="font-size:24px">请输入付款金额</h3>
@@ -99,7 +109,6 @@
                         name="xfje"
                         v-model="payFrom.xfje"
                         @keypress.enter="pay()"
-                        @keypress.tab="pay()"
                     />
                 </div>
                 <el-button
@@ -117,6 +126,7 @@
 import Header from "../components/Header";
 import StoreInfo from "../components/StoreInfo";
 import Menu from "../components/Menu";
+import {checkLogin, generateUnionID, payNotification} from "../common";
 import {ApiUrl} from "../constant"
 import {stringify} from "querystring";
 export default {
@@ -148,14 +158,14 @@ export default {
                 ]},
                 search:{
                     curpage:1,
-                    page:10,
+                    page:16,
                     member_mobile:'',
                     lx:0,
                 },
                 pages:[
                     {num:'1',s:'s'}
                 ],
-                targetPage:'',
+                targetPage:1,
             },
             payFrom:{
                 member_mobile: "",
@@ -166,21 +176,48 @@ export default {
     },
     methods:{
         pay(){
+            let ddh = generateUnionID();
             this.$prompt('请扫码', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
             }).then(({ value }) => {
                 console.log(value);
-                this.$message({
-                    type: 'success',
-                    message: '支付成功'
-                });
+                this.$http.post(ApiUrl+'?act=seller_sm&op=jhfs',stringify({...this.payFrom, sn:value, ddh:ddh, key:localStorage.getItem('key')})).then(res=>{
+                    checkLogin(res.data.login);
+                    if(res.data.code != 200){
+                        this.$message.error('扫码出现错误，请稍后再试!');
+                        return ;
+                    }
+                    this.hidePayForm();
+                    this.payFrom = Object.assign(this.payFrom,{
+                        member_mobile: "",
+                        xfje: "",
+                    },)
+                    payNotification(ddh,(data)=>{
+                        this.$message.success({
+                            title:'消息',
+                            message:data.member_name+' 成功支付金额'+data.xfje+'元',
+                            showClose:true,
+                            duration:8000,
+                        })
+                        this.table.search.curpage = 1;
+                        this.loadForm();
+                    });
+                })
             }).catch(() => {
                 this.$message({
                     type: 'info',
                     message: '已取消'
                 });       
             });
+        },
+        payByRow(row){
+            console.log(row);
+            this.payFrom = Object.assign(this.payFrom,{
+                member_mobile: row.member_mobile,
+                xfje: row.xfje,
+            });
+            this.showPayForm();
         },
         showPayForm(){
             this.isShowPayForm = true;
@@ -194,6 +231,7 @@ export default {
         loadForm(){
             this.table.loading = true;
             this.$http.get(ApiUrl+"?act=seller_sm&op=skmx&"+stringify({...this.table.search,key:localStorage.getItem('key')})).then(res=>{
+                checkLogin(res.data.login);
                 this.table.data.total = res.data.datas.total;
                 this.table.data.list = res.data.datas.list;
                 this.table.data.totalPage = res.data.datas.totalPage;
@@ -260,6 +298,9 @@ export default {
         'table.search.page':function(){
             this.table.search.curpage = 1;
             this.loadForm();
+        },
+        'table.search.curpage':function(){
+            this.table.targetPage = this.table.search.curpage;
         },
     }
 };

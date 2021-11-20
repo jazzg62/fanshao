@@ -73,8 +73,17 @@ export default {
     },
     methods: {
         logout() {
-            localStorage.removeItem("key");
-            this.$router.push("/login");
+            try{
+                this.$http.post(ApiUrl + "?act=seller_sm&op=logout&"+stringify({key:localStorage.getItem('key')})).then((res) => {
+                        console.log(res);
+                    }
+                );
+            }catch(e){
+                console.log(e);
+            }finally{
+                localStorage.removeItem("key");
+                this.$router.push("/login");
+            }
         },
         home() {
             this.$router.push("/");

@@ -40,9 +40,12 @@
                     </el-table-column>
                     <el-table-column prop="xfje" label="支付金额" align="center">
                     </el-table-column>
-                    <el-table-column prop="xfje" label="时间" align="center">
+                    <el-table-column prop="addtime" label="时间" align="center">
                     </el-table-column>
                     <el-table-column prop="xflx" label="消费类型" align="center">
+                        <template slot-scope="scope">
+                            <span >{{scope.row.xflx|xflx}}</span>
+                        </template>
                     </el-table-column>
                 </el-table>
 
@@ -66,9 +69,9 @@
                         id="table-size"
                         v-model="table.search.page"
                     >
-                        <option value="10">10/页</option>
-                        <option value="20">20/页</option>
-                        <option value="30">30/页</option>
+                        <option value="16">16/页</option>
+                        <option value="24">24/页</option>
+                        <option value="32">32/页</option>
                         <option value="40">40/页</option>
                     </select>
                 </div>
@@ -82,8 +85,9 @@
 import Header from "../components/Header";
 import StoreInfo from "../components/StoreInfo";
 import Menu from "../components/Menu";
-import {ApiUrl} from "../constant"
-import {stringify} from "querystring";
+import { ApiUrl } from "../constant"
+import { stringify } from "querystring";
+import { checkLogin, xflx } from '../common';
 export default {
     name: "Detail",
     beforeMount:function(){
@@ -107,21 +111,25 @@ export default {
                 ]},
                 search:{
                     curpage:1,
-                    page:10,
+                    page:16,
                     member_mobile:'',
                     lx:0,
                 },
                 pages:[
                     {num:'1',s:'s'}
                 ],
-                targetPage:'',
+                targetPage:1,
             },
         }
+    },
+    filters: {
+        xflx
     },
     methods:{
         loadForm(){
             this.table.loading = true;
             this.$http.get(ApiUrl+"?act=seller_sm&op=xfmx&"+stringify({...this.table.search,key:localStorage.getItem('key')})).then(res=>{
+                checkLogin(res.data.login);
                 this.table.data.total = res.data.datas.total;
                 this.table.data.list = res.data.datas.list;
                 this.table.data.totalPage = res.data.datas.totalPage;
@@ -131,7 +139,7 @@ export default {
             })
         },
         reCalcautePage(){
-            let list = [];            
+            let list = [];
             for(let i=1;i<=this.table.data.totalPage;i++){
                 if(i<this.table.search.curpage-3){
                     list.push({num:1,s:''});
@@ -188,6 +196,9 @@ export default {
         'table.search.page':function(){
             this.table.search.curpage = 1;
             this.loadForm();
+        },
+        'table.search.curpage':function(){
+            this.table.targetPage = this.table.search.curpage;
         },
     }
 };

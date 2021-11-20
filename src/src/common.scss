@@ -243,6 +243,8 @@ input{
     display: flex;
     flex-direction: column;
     padding: 0 30px;
+    min-height: calc(100vh - 85px);
+    box-sizing: border-box;
 
     &-search {
         height: 110px;
@@ -264,7 +266,7 @@ input{
             input {
                 border: none;
                 outline: none;
-                color: rgba(40, 179, 224, 0.5);
+                color: rgba(40, 179, 224, 1);
                 font-size: 18px;
                 flex: 1;
             }
@@ -357,6 +359,9 @@ input{
                     &:nth-child(n + 2) {
                         margin-left: 10px;
                     }
+                    &:hover {
+                        background: rgba(255, 255, 255, 0.5);
+                    }
                 }
 
                 .arrow {
@@ -366,6 +371,11 @@ input{
                 .select {
                     background: #28b3e0;
                     color: #fff;
+
+                    &:hover{
+                        background: rgba(40, 178, 224, 0.5);
+                        border: 1px solid #28b2e07a;
+                    }
                 }
 
                 .table-navigation-dot {
@@ -433,4 +443,8 @@ input{
     content: "\e6db";
     font-size: 26px;
     color: #333;
+}
+
+.el-message__content{
+    font-size: 20px;
 }

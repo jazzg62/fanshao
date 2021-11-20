@@ -1,7 +1,7 @@
 <template>
     <div class="home full-bg1">
         <Header></Header>
-        <div class="table">
+        <div class="home-table">
             <div class="row">
                 <div class="br">
                   <div class="item w9 h3 blue"><div class="store-avatar"><img :src="avatar" alt=""></div><h3>{{name}}</h3></div>
@@ -78,7 +78,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.table {
+.home-table {
     margin: auto;
     margin-top: 100px;
     display: inline-block;
