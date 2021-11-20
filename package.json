@@ -1,7 +1,7 @@
 {
   "name": "fanshao",
-  "version": "1.0.0",
-  "description": "惠花生商家收款工具，基于Electron 开发。",
+  "version": "1.2.2",
+  "description": "企联收银台，基于Electron 开发。",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
@@ -15,22 +15,28 @@
     "electron-builder": "^22.13.1"
   },
   "build": {
-    "productName": "惠花生商家收款工具",
+    "productName": "企联收银台",
     "appId": "com.fanshao.client",
     "copyright": "©企联 2021",
+    "publish": [
+      {
+        "provider": "generic",
+        "url": "https://new.cnqilian.com/fanshao/"
+      }
+    ],
     "directories": {
       "output": "dist"
     },
     "nsis": {
       "oneClick": false,
       "allowElevation": true,
-      "allowToChangeInstallationDirectory": true, 
+      "allowToChangeInstallationDirectory": true,
       "installerIcon": "favicon.ico",
       "uninstallerIcon": "favicon.ico",
       "installerHeaderIcon": "favicon.ico",
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
-      "shortcutName": "惠花生商家收款工具"
+      "shortcutName": "企联收银台"
     },
     "win": {
       "icon": "favicon.ico",
@@ -62,5 +68,8 @@
     "linux": {
       "icon": "favicon.ico"
     }
+  },
+  "dependencies": {
+    "electron-updater": "^4.3.9"
   }
 }
