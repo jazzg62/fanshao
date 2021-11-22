@@ -70,6 +70,6 @@
     }
   },
   "dependencies": {
-    "electron-updater": "^4.3.9"
+    "electron-updater": "^4.6.1"
   }
 }
