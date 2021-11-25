@@ -1,7 +1,7 @@
 <template>
     <div class="home full-bg1">
         <Header></Header>
-        <div class="home-table">
+        <!-- <div class="home-table">
             <div class="row">
                 <div class="br">
                   <div class="item w9 h3 blue"><div class="store-avatar"><img :src="avatar" alt=""></div><h3>{{name}}</h3></div>
@@ -45,7 +45,9 @@
                   </div>
                 </div>
             </div>
-        </div>
+        </div> -->
+
+        
     </div>
 </template>
 
