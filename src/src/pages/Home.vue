@@ -1,53 +1,58 @@
 <template>
     <div class="home full-bg1">
         <Header></Header>
-        <!-- <div class="home-table">
-            <div class="row">
-                <div class="br">
-                  <div class="item w9 h3 blue"><div class="store-avatar"><img :src="avatar" alt=""></div><h3>{{name}}</h3></div>
-                </div>
-                <div class="br">
-                  <div class="item w6 h3 blue"><h3>本店会员（{{hys}}）</h3></div>
-                </div>
+        <div class="menu">
+          <div class="store-info">
+            <div class="store-avatar"><img :src="avatar" alt="店铺头像"></div>
+            <h2 class="store-name">{{name}}</h2>
+          </div>
+          <div class="block" style="left:830px;">
+            <div class="container">
+              <img src="../assets/index/f.png" alt="">
+              <div class="text">
+                <h3>收款</h3>
+              </div>
             </div>
+          </div>
 
-            <div class="row">
-                <div class="br pointer">
-                  <router-link to='/detail'>
-                    <div class="column item w3 h6 blue blue-hover">
-                        <div class="icon icon-xl3 icon-mingxi-w">
-                        </div>
-                        <span>明细</span>
-                    </div>
-                  </router-link>
-                  <div class="column">
-                      <router-link to="/detail?lx=1" class="item w3 h3 blue1 blue1-hover">微信</router-link>
-                      <router-link to="/detail?lx=4" class="item w3 h3 blue2 blue2-hover">红包</router-link>
-                  </div>
-                  <div class="column">
-                      <router-link to="/detail?lx=2" class="item w3 h3 blue2 blue2-hover">支付宝</router-link>
-                      <router-link to="/detail?lx=3" class="item w3 h3 blue1 blue1-hover">余额支付</router-link>
-                  </div>
-                </div>
-                
-                <div class="br pointer">
-                  <router-link to='/receipt?paypop=1'>
-                    <div class="column item w3 h6 blue blue-hover">
-                        <div class="icon icon-xl3 icon-shoukuan-w">
-                        </div>
-                        <span>收款</span>
-                    </div>
-                  </router-link>
-                  <div class="column">
-                      <router-link to="/receipt?lx=1" class="item w3 h2 blue1 blue1-hover">已支付</router-link>
-                      <router-link to="/receipt?lx=2" class="item w3 h2 blue2 blue2-hover">待支付</router-link>
-                      <router-link to="/receipt" class="item w3 h2 blue1 blue1-hover">全部查询</router-link>
-                  </div>
-                </div>
+          <div class="block" style="top:169px;">
+            <div class="container">
+              <img src="../assets/index/z.png" alt="">
+              <div class="text">
+                <h3>会员</h3>
+                <h4 style="margin-top:28px;">本店会员</h4>
+              </div>
             </div>
-        </div> -->
+          </div>
 
-        
+          <div class="block" style="top:480px;">
+            <div class="container">
+              <img src="../assets/index/s.png" alt="">
+              <div class="text">
+                <h4>数据汇总</h4>
+              </div>
+            </div>
+          </div>
+          
+          <div class="block" style="top:480px;left:410px;">
+            <div class="container">
+              <img src="../assets/index/l.png" alt="">
+              <div class="text">
+                <h4>流量变现</h4>
+              </div>
+            </div>
+          </div>
+
+          <div class="block" style="left:830px;top:330px;">
+            <div class="container">
+              <img src="../assets/index/m.png" alt="">
+              <div class="text">
+                <h3>消费记</h3>
+                <h3>录明细</h3>
+              </div>
+            </div>
+          </div>
+        </div>
     </div>
 </template>
 
@@ -80,98 +85,77 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.home-table {
-    margin: auto;
-    margin-top: 100px;
-    display: inline-block;
-    color: white;
-    font-size: 36px;
-    background: transparent;
-    letter-spacing: 2px;
-    .store-avatar{
-      width: 90px;
-      height: 90px;
-      margin-right: 20px;
-      img{
-        width: 100%;
-        height: 100%;
-        object-fit: contain;
-        border-radius: 50%;
-      }
-    }
-    h3{
-      font-size: 54px;
-      font-weight: normal;
-    }
-    .item{
+  .menu{
+    display: block;
+    // float: left;
+    width: 1460px;
+    min-height: 633px;
+    margin: 80px auto;
+    // background: red;
+    position: relative;
+
+    .store-info{
       display: flex;
       align-items: center;
-      justify-content: center;
-    }
-    .blue {
-        background: #28b3e0;
-    }
-    .blue1 {
-        background: #5dc5e7;
-    }
-    .blue2 {
-        background: #2eb6e1;
+      height: 136px;
+      width: 796px;
+      background: linear-gradient(to bottom, #3173EE, #2CC8FE);
+      position: absolute;
+      border-radius: 5px;
+      box-sizing: border-box;
+      padding-left: 137px;
+      .store-avatar{
+        width: 75px;
+        height: 75px;
+        border-radius: 50%;
+        overflow: hidden;
+        margin-right: 28px;
+        img{
+          width: 100%;
+        }
+      }
+      .store-name{
+        color: white;
+        font-size: 50px;
+        letter-spacing: 2px;
+        font-weight: 400;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
     }
 
-    .row {
-        display: flex;
-    }
-    .column {
-        display: flex;
-        flex-direction: column;
-        span{
-          font-size: 54px;
+    .block{
+      position: absolute;
+      border-radius: 5px;
+
+      .container{
+        position: relative;
+        img{
+          position: relative;
+          left: 0;
+          top: 0;
         }
+
+        .text{
+          position: absolute;
+          left: 6%;
+          top: 10%;
+          h3{
+            font-size: 50px;
+            text-align: left;
+            margin-top: 0;
+            margin-bottom: 0;
+          }
+          h4{
+            font-size: 28px;
+            text-align: left;
+            margin-top: 0;
+            margin-bottom: 0;
+          }
+        }
+      }
+      
     }
-    .blue-hover:hover{
-      background: #28b2e0b7;
-      transition: all 0.3s;
-    }
-    .blue1-hover:hover{
-      background: #5dc5e7b9;
-      transition: all 0.3s;
-    }
-    .blue2-hover:hover{
-      background: #2eb7e1c0;
-      transition: all 0.3s;
-    }
-    .br{
-      border-radius: 8px;
-      overflow: hidden;
-      display: flex;
-      margin: 7px 11px;
-    }
-    .w2 {
-        width: 130px;
-    }
-    .w3 {
-        width: calc(850px / 3);
-    }
-    .w6 {
-        width: calc(850px * 0.66666);
-    }
-    .w7 {
-        width: 580px;
-    }
-    .w9 {
-        width: 850px;
-    }
-    .h2 {
-        height: 141.65px;
-    }
-    .h3 {
-        height: 212.5px;
-    }
-    .h6 {
-        height: 425px;
-    }
-    .icon{
-      margin-bottom: 32px;
-    }
-}
+  }
 </style>
