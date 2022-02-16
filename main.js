@@ -2,6 +2,7 @@
 const {app, BrowserWindow, Menu, Tray, nativeImage, dialog} = require('electron')
 const {autoUpdater} = require("electron-updater");
 const path = require('path')
+const {startServer, reqStart} = require('./server.js')
 
 function createWindow () {
   // Create the browser window.
@@ -67,7 +68,7 @@ function createWindow () {
   Menu.setApplicationMenu(null)
 
   // 加载页面文件
-  mainWindow.loadFile('src/dist/index.html')
+  mainWindow.loadFile('ql_cashier/dist/index.html')
   checkUpdate();
 
   // 开启调试工具
@@ -89,6 +90,10 @@ function createWindow () {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
+  // 启动服务器
+  startServer();
+  // 开启打印端口
+  reqStart();
   createWindow();
 
   app.on('activate', function () {
