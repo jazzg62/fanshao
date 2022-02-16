@@ -1,0 +1,75 @@
+{
+  "name": "fanshao",
+  "version": "2.0.2",
+  "description": "企联收银台，基于Electron 开发。",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "win32": "electron-builder --win --ia32",
+    "win64": "electron-builder --win --x64"
+  },
+  "author": "GitHub",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^15.3.0",
+    "electron-builder": "^22.13.1"
+  },
+  "build": {
+    "productName": "企联收银台",
+    "appId": "com.fanshao.client",
+    "copyright": "©企联 2021",
+    "publish": [
+      {
+        "provider": "generic",
+        "url": "https://new.cnqilian.com/fanshao/"
+      }
+    ],
+    "directories": {
+      "output": "dist"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowElevation": true,
+      "allowToChangeInstallationDirectory": true,
+      "installerIcon": "favicon.ico",
+      "uninstallerIcon": "favicon.ico",
+      "installerHeaderIcon": "favicon.ico",
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "企联收银台"
+    },
+    "win": {
+      "icon": "favicon.ico",
+      "requestedExecutionLevel": "requireAdministrator",
+      "target": [
+        {
+          "target": "nsis"
+        }
+      ]
+    },
+    "dmg": {
+      "contents": [
+        {
+          "x": 410,
+          "y": 150,
+          "type": "link",
+          "path": "/Applications"
+        },
+        {
+          "x": 130,
+          "y": 150,
+          "type": "file"
+        }
+      ]
+    },
+    "mac": {
+      "icon": "favicon.ico"
+    },
+    "linux": {
+      "icon": "favicon.ico"
+    }
+  },
+  "dependencies": {
+    "electron-updater": "^4.3.9"
+  }
+}
