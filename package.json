@@ -11,7 +11,7 @@
   "author": "GitHub",
   "license": "MIT",
   "devDependencies": {
-    "electron": "^15.3.0",
+    "electron": "^18.0.3",
     "electron-builder": "^22.13.1"
   },
   "build": {
